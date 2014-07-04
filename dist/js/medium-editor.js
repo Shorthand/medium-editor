@@ -106,6 +106,7 @@ if (typeof module === 'object') {
             disableDoubleReturn: false,
             disableToolbar: false,
             disableEditing: false,
+            enableLineBreak: false,
             elementsContainer: false,
             firstHeader: 'h3',
             forcePlainText: true,
@@ -304,14 +305,17 @@ if (typeof module === 'object') {
             var self = this;
             this.elements[index].addEventListener('keypress', function (e) {
                 if (e.which === 13) {
-                    if (self.options.disableReturn || this.getAttribute('data-disable-return')) {
-                        e.preventDefault();
-                    } else if (self.options.disableDoubleReturn || this.getAttribute('data-disable-double-return')) {
-                        var node = getSelectionStart();
-                        if (node && node.innerText === '\n') {
-                            e.preventDefault();
-                        }
+                  if (self.options.enableLineBreak || this.getAttribute('data-enable-linebreak')) {
+                    document.execCommand('insertHtml', null, '<br><br>');
+                    e.preventDefault();
+                  } else if (self.options.disableReturn || this.getAttribute('data-disable-return')) {
+                    e.preventDefault();
+                  } else if (self.options.disableDoubleReturn || this.getAttribute('data-disable-double-return')) {
+                    var node = getSelectionStart();
+                    if (node && node.innerText === '\n') {
+                      e.preventDefault();
                     }
+                  }
                 }
             });
             return this;
