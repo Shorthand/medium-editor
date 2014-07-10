@@ -310,7 +310,7 @@ if (typeof module === 'object') {
                     var node = getSelectionStart();
                     if (self.options.enableLineBreak || this.getAttribute('data-enable-linebreak')) {
                         e.preventDefault();
-                        document.execCommand('insertHtml', null, '<br>');
+                        document.execCommand('insertHtml', null, '<br><br>');
                     } else if (self.options.disableReturn || this.getAttribute('data-disable-return')) {
                         e.preventDefault();
                     } else if (self.options.disableDoubleReturn || this.getAttribute('data-disable-double-return')) {
