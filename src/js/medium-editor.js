@@ -268,6 +268,8 @@ if (typeof module === 'object') {
                     tagName;
                 if (node && node.getAttribute('data-medium-element') && node.children.length === 0 && !(self.options.disableReturn || node.getAttribute('data-disable-return'))) {
                     document.execCommand('formatBlock', false, 'p');
+                } else if (node && node.getAttribute('data-medium-element') && (!node.lastChild || node.lastChild.nodeName.toLowerCase() !== 'br') && (self.options.enableLineBreak || node.getAttribute('data-enable-linebreak'))) {
+                    document.execCommand('insertHtml', false, '<br>');
                 }
                 if (e.which === 13) {
                     node = getSelectionStart();
@@ -307,10 +309,18 @@ if (typeof module === 'object') {
             var self = this;
             this.elements[index].addEventListener('keypress', function (e) {
                 if (e.which === 13) {
-                    var node = getSelectionStart();
+                    var node = getSelectionStart(),
+                        selection = window.getSelection(),
+                        range = selection.getRangeAt(0),
+                        br = document.createElement('br');
                     if (self.options.enableLineBreak || this.getAttribute('data-enable-linebreak')) {
                         e.preventDefault();
-                        document.execCommand('insertHtml', null, '<br><br>');
+                        range.deleteContents();
+                        range.insertNode(br);
+                        range.setStartAfter(br);
+                        range.setEndAfter(br);
+                        selection.removeAllRanges();
+                        selection.addRange(range);
                     } else if (self.options.disableReturn || this.getAttribute('data-disable-return')) {
                         e.preventDefault();
                     } else if (self.options.disableDoubleReturn || this.getAttribute('data-disable-double-return')) {
